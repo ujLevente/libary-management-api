@@ -39,9 +39,9 @@ public class WishlistController {
     UserRepository ur;
 
     @PostMapping("/onwishlist")
-    public String onwishlist(@RequestParam("OLID") String olId, @RequestBody String req) {
-        Long user = 0L;
-        Wishlist wishlist = wrep.findByOlId(olId);
+    public String onwishlist(@RequestParam("OLID") String olId, Authentication authentication) {
+        User user = ur.findByUsername(authentication.getName()).orElse(null);
+        Wishlist wishlist = wrep.findByUserAndOlId(user, olId);
 
         System.out.println("wishlist: " + wishlist);
 

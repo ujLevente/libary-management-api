@@ -17,10 +17,11 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
-    @Column(name = "userId")
-    private Long userId;
     @Column(name = "olId")
     private String olId;
+    @ManyToOne
+    private User user;
+
 
 //    public Wishlist(CustomUserDetails user, String olId) {
 ////        this.user = user;

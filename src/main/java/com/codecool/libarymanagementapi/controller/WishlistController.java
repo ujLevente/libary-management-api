@@ -6,6 +6,7 @@ import com.codecool.libarymanagementapi.message.response.JwtResponse;
 import com.codecool.libarymanagementapi.message.response.ResponseMessage;
 import com.codecool.libarymanagementapi.model.User;
 import com.codecool.libarymanagementapi.model.Wishlist;
+import com.codecool.libarymanagementapi.repository.UserRepository;
 import com.codecool.libarymanagementapi.repository.WishlistRepository;
 import com.codecool.libarymanagementapi.security.jwt.JwtAuthTokenFilter;
 import com.codecool.libarymanagementapi.security.services.UserDetailsServiceImpl;
@@ -31,9 +32,11 @@ import java.util.Set;
 @RequestMapping("/wishlist")
 public class WishlistController {
 
-
     @Autowired
     WishlistRepository wrep;
+
+    @Autowired
+    UserRepository ur;
 
     @PostMapping("/onwishlist")
     public String onwishlist(@RequestParam("OLID") String olId, @RequestBody String req) {
@@ -54,15 +57,17 @@ public class WishlistController {
 
 
     @PostMapping("/add")
-    public String greeting(@RequestParam("OLID") String olId, @RequestBody String req) {
-        System.out.println("REQ: " + req);
-        Long user = 0L;
+    public String greeting(@RequestParam Map<String,String> allRequestParams, @RequestParam("OLID") String olId, Authentication authentication) {
+        System.out.println("WISHLIST ADD " + olId);
+        System.out.println("AllrequestParams: " + allRequestParams);
+        User user = ur.findByUsername(authentication.getName()).orElse(null);
+//        System.out.println("REQ: " + req);
 
-        Wishlist book = wrep.findByUserIdAndOlId(user, olId);
+        Wishlist book = wrep.findByUserAndOlId(user, olId);
         JSONObject obj = new JSONObject();
         if (book == null) {
             Wishlist newWish = new Wishlist();
-            newWish.setUserId(user);
+            newWish.setUser(user);
             newWish.setOlId(olId);
             wrep.save(newWish);
             obj.put("success", true);
@@ -74,13 +79,12 @@ public class WishlistController {
     }
 
     @PostMapping("/remove")
-    public String remove(@RequestParam("OLID") String olId) {
-        Long user = 0L;
-        Set<Wishlist> wishlist = wrep.findAllByUserId(user);
-        System.out.println("olId: " + olId);
+    public String remove(@RequestParam("OLID") String olId, Authentication authentication) {
+        User user = ur.findByUsername(authentication.getName()).orElse(null);
+        System.out.println("OLID:" + olId);
+        System.out.println("USER: " + user.getName());
 
-
-        Long book = wrep.deleteWishlistByUserIdAndOlId(user, olId);
+        Long book = wrep.deleteWishlistByUserAndOlId(user, olId);
         System.out.println("book: " + book);
 
         JSONObject obj = new JSONObject();
@@ -93,17 +97,9 @@ public class WishlistController {
     }
 
     @PostMapping("/getwishlist")
-    public String getwishlist(HttpServletRequest request, Authentication authentication) {
-        UserPrinciple user2 = (UserPrinciple) authentication.getPrincipal();
-        System.out.println(user2);
-        System.out.println("auth: " + authentication.getName());
-//        String jwt = getJwtFromRequest(request);
-//        System.out.println("AUTH NAME: " + jwt);
-//        User user2 = (User) authentication.getPrincipal();
-
-//        System.out.println("username " + user2.getName());
-        Long user = 0L;
-        Set<Wishlist> wishlistSet = wrep.findAllByUserId(user);
+    public String getwishlist(Authentication authentication) {
+        User user = ur.findByUsername(authentication.getName()).orElse(null);
+        Set<Wishlist> wishlistSet = wrep.findAllByUser(user);
         JSONObject obj = new JSONObject();
 
         for (Wishlist book : wishlistSet){
@@ -111,17 +107,5 @@ public class WishlistController {
         }
         System.out.println(obj.toString());
         return obj.toString();
-    }
-
-    private String getJwtFromRequest(HttpServletRequest request) {
-
-//        logger.debug("Attempting to get token from request header");
-
-        String bearerToken = request.getHeader("Authorization");
-        System.out.println("bearerToken: " + bearerToken);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7, bearerToken.length());
-        }
-        return null;
     }
 }

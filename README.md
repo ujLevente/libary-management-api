@@ -4,4 +4,4 @@ This is the back end of the my libary management app, you can find the Anguar fr
 It is a learning project my main aim was practicing Spring Boot and Angular.
 
 Functionality:<br />
-  The data comes from the [API](https://openlibrary.org/developers/api) of OpenLibary.
+- The data comes from the [API](https://openlibrary.org/developers/api) of OpenLibary.

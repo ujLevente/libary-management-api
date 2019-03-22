@@ -22,18 +22,11 @@ public class Wishlist {
     @ManyToOne
     private User user;
 
-
-//    public Wishlist(CustomUserDetails user, String olId) {
-////        this.user = user;
-//        this.olId = olId;
-//    }
-
     @Override
     public String toString() {
         return "Wishlist{" +
                 "id=" + id +
                 ", olId='" + olId + '\'' +
-//                ", user=" + user +
                 '}';
     }
 }

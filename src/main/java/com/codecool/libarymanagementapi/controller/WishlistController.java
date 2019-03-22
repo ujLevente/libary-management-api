@@ -61,7 +61,6 @@ public class WishlistController {
         System.out.println("WISHLIST ADD " + olId);
         System.out.println("AllrequestParams: " + allRequestParams);
         User user = ur.findByUsername(authentication.getName()).orElse(null);
-//        System.out.println("REQ: " + req);
 
         Wishlist book = wrep.findByUserAndOlId(user, olId);
         JSONObject obj = new JSONObject();

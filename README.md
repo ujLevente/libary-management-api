@@ -1,6 +1,6 @@
 LIBARY MANAGEMENT LEARNING APP
 
-This is the back end of the my libary management app, you can find the Anguar front end [here](https://github.com/ujLevente/libary-management.)
+This is the back end of the my libary management app, you can find the Anguar front end [here](https://github.com/ujLevente/libary-management.).<br />
 It is a learning project the aim was practicing Spring Boot and Angular, the project did not get finished.
 
 Used technologies, data source:<br />
